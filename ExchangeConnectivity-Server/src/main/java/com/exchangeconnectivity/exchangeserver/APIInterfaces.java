@@ -12,9 +12,14 @@ public class APIInterfaces {
         Call<String> createOrder(@Body Order newOrder);
     }
 
-    public static interface cancelOrder {
+    public static interface CancelOrder {
         @DELETE("8ec70649-0be5-4b5a-9e29-60bc424d7b60/order/{orderID}")
         Call<String> cancelOrder(@Path("orderID") String orderId);
+    }
+
+    public static interface EditOrderService {
+        @PUT("8ec70649-0be5-4b5a-9e29-60bc424d7b60/order/{orderID}")
+        Call<String> editOrder(@Body Order order, @Path("orderID") String orderId);
     }
 
 }
