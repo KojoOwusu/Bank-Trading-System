@@ -1,5 +1,6 @@
 package com.exchangeconnectivity.exchangeserver;
 import com.exchangeconnectivity.exchangeserver.resourceclasses.Order;
+import com.exchangeconnectivity.exchangeserver.resourceclasses.OrderResponse;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -20,6 +21,11 @@ public class APIInterfaces {
     public static interface EditOrderService {
         @PUT("8ec70649-0be5-4b5a-9e29-60bc424d7b60/order/{orderID}")
         Call<String> editOrder(@Body Order order, @Path("orderID") String orderId);
+    }
+
+    public static interface GetOrder {
+        @GET("8ec70649-0be5-4b5a-9e29-60bc424d7b60/order/{orderID}")
+        Call<OrderResponse> getOrderStatus(@Path("orderID") String orderId);
     }
 
 }

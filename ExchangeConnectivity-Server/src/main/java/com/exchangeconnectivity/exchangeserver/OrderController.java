@@ -8,6 +8,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 public class OrderController {
@@ -19,7 +20,7 @@ public class OrderController {
     @RequestMapping(value = "/api/createorder", method=RequestMethod.POST,produces = "application/json",headers = "Accept=*/*", consumes="application/json")
     @ResponseBody
     public String createOrder(@RequestBody Order newOrder) {
-        APIInterfaces.CreateOrderService service = retrofit.create(APIInterfaces.CreateOrderService.class);
+        var service = retrofit.create(APIInterfaces.CreateOrderService.class);
         Call<String> req = service.createOrder(newOrder);
         try {
             Response<String> res = req.execute();
@@ -33,8 +34,16 @@ public class OrderController {
 
     @RequestMapping(value="/api/getorder", method=RequestMethod.GET, produces = "application/json",headers="Accept=*/*")
     @ResponseBody
-    public String getOrderStatus(@RequestParam int ID){
-        return String.format("the Order ID is %d",ID);
+    public OrderResponse getOrderStatus(@RequestParam String ID){
+        var service= retrofit.create(APIInterfaces.GetOrder.class);
+        Call<OrderResponse> req = service.getOrderStatus(ID);
+        try {
+            Response<OrderResponse> res = req.execute();
+            return res.body();
+        }catch(java.io.IOException e){}
+        catch(java.lang.IllegalArgumentException e){e.getMessage();}
+        return new OrderResponse();
+        //return String.format("the Order ID is %d",ID);
     }
 
 
