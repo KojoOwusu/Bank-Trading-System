@@ -36,9 +36,16 @@ public class OrderController {
 
     @RequestMapping(value = "/api/cancelorder",produces = "application/json", method=RequestMethod.DELETE, headers = "Accept=*/*")
     @ResponseBody
-    public String cancelOrder(@RequestParam int ID) {
-
-        return "true";
+    public String cancelOrder(@RequestParam String ID) {
+        APIInterfaces.cancelOrder service = retrofit.create(APIInterfaces.cancelOrder.class);
+        Call<String> req = service.cancelOrder(ID);
+        try {
+            Response<String> res = req.execute();
+            return res.body();
+        }catch(java.io.IOException e){}
+        catch(java.lang.IllegalArgumentException e){e.getMessage();}
+        return "failed to cancel orderID: "+ID;
+        //return "true";
     }
 
 
