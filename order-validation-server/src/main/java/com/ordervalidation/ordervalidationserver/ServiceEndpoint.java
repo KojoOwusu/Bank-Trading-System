@@ -19,7 +19,7 @@ public class ServiceEndpoint {
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         ValidationResponse response = new ValidationResponse();
         response.setOrderID("2fb-00-56-ui-URI2");
-        response.setOrderstatus("Order validated successfully");
+        response.setOrderstatus("Order was validated successfully");
         return response;
     }
 }
