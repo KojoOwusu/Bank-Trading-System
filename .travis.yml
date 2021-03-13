@@ -1,7 +1,5 @@
 language: java
-jdk: openjdk10
 
-install: true
-script: ./mvnw clean install
+
 
 
