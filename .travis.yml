@@ -1,9 +1,6 @@
 language: java
 install: true
-script:
-    - cd order-validation-server
-    - mvn clean verify
-
+script: echo "build triggered in main"
 branches:
   only:
     - main
