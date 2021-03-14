@@ -3,6 +3,7 @@ install: true
 script:
     - cd order-validation-server
     - mvn clean verify
+
 branches:
   only:
     - main
