@@ -14,7 +14,7 @@ public class ServiceEndpoint {
 
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "ValidateOrder")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "validateOrder")
     @ResponsePayload
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         ValidationResponse response = new ValidationResponse();
