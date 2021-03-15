@@ -7,4 +7,5 @@ deploy:
   provider: heroku
   on:
     branch: exchange-con
+  app: exchange-con
   api_key: $HEROKU_API_KEY
