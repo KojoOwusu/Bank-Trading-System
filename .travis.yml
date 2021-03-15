@@ -3,3 +3,12 @@ install: true
 script:
   - cd ExchangeConnectivity-Server
   - mvn clean verify
+before_deploy: cd ExchangeConnectivity-Server
+deploy:
+      provider: heroku
+      on:
+        branch: exchange-con
+      api_key:
+        secure: "yWb/61CXDoPhob6vneTH8WZahR0NpJX9F7/FEFluLAjbxH36uOC11biNHo+NDM6s3BC29VpxJvezVxYghHBu/1Wl0fPmVpBbW4pwOCIHeghiLhSkoV3gZYtjN72VNqg2HM3xHb32mCQBMsV3pBcIDMjVqWEdIa7i/G1vyItyQRmGO+cw0348U7mmHbTEvyUU95T9y0iHTpqcpIcW+trlkkAzfcBVOnDZgyKMisCeykwrRIVpaM/bbmvvWqXAERJwpznRqub/zu0vnwqkNjoNGb95B0EB7yzhZ8+Utm9taGrmjemheIO7BsPoWg+txxLAWRu752UN+W8JLM8Ys/iI5Z96jnYIBG4TnXS9ugjFZzkE038vBZ2GhqaJm7zHjq1E9WCLC9ENckMyiidoISZaF8+WTl3y1QoaHcaC3oq+Y+yAKW1BacQofEkPFPFFbx2D6vVB3kexRwJ/AhgxoWzVlY7Bz4ps0cBv/rmvEgRk4+kS55OJOUaTeWWoCRqrRbZklPGazBvlfRUMmAPRZXh1bINrYpaj+o7MpqSWsIykEwsv7TrQ0g7k2d6p/4CuTWfWWBt/DSETtjz0EWu1wyMrZyPB1xinzrt2GFWGu04pMgHnajTAdkePgr+4r+kwvlg1tWQkjSyVsh6bo8JQJdZbYpsD811UYRvffxVvoAs7+RA="
+
+g
