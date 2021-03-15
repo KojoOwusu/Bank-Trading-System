@@ -2,6 +2,7 @@ package com.exchangeconnectivity.exchangeserver;
 
 import org.springframework.web.bind.annotation.*;
 import com.exchangeconnectivity.exchangeserver.resourceclasses.*;
+import redis.clients.jedis.Jedis;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
