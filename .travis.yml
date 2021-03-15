@@ -3,7 +3,6 @@ install: true
 script:
   - cd ExchangeConnectivity-Server
   - mvn clean verify
-before_deploy: cd ExchangeConnectivity-Server
 deploy:
       provider: heroku
       on:
