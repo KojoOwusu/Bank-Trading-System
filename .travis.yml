@@ -3,3 +3,9 @@ install: true
 script:
   - cd order-validation-server
   - mvn clean verify
+deploy:
+    provider: heroku
+    on:
+      branch: order-validation
+    app: order-validation
+    api_key: $HEROKU_API_KEY
