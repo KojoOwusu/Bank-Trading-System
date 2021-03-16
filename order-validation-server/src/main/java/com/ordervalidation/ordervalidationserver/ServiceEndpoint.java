@@ -1,5 +1,4 @@
 package com.ordervalidation.ordervalidationserver;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
