@@ -1,0 +1,11 @@
+language: java
+install: true
+script:
+  - cd TradeServices
+  - mvn clean verify
+deploy:
+  provider: heroku
+  on:
+    branch: TradeServices
+  app: trade-services
+  api_key: $HEROKU_API_KEY
