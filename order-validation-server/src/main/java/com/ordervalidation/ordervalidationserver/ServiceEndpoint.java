@@ -1,4 +1,6 @@
 package com.ordervalidation.ordervalidationserver;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 @Endpoint
 public class ServiceEndpoint {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl("").addConverterFactory(GsonConverterFactory.create()).build();
+    Retrofit retrofit = new Retrofit.Builder().baseUrl("http://1435113c71c9.ngrok.io").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
 
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
