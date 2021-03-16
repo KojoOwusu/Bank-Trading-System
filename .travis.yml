@@ -5,4 +5,5 @@ branches:
     - main
     - order-validation
     - exchange-con
+    - TradeServices
 
