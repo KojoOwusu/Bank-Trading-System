@@ -1,10 +1,6 @@
 package tradeengine.TradeServices;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import retrofit2.Response;
@@ -21,7 +17,7 @@ public class TradeEngineRESTController {
 @ResponseBody
 public String receiveOrder(@RequestBody Order order) {
 
-    var service = retrofit.create(PostOrderService.class);
+    var service = retrofit.create(OrderService.class);
     var req = service.createOrder(order);
     try {
 //        return req.execute().body();
