@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Endpoint
 public class ServiceEndpoint {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl("http://1435113c71c9.ngrok.io").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
+    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
 
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
@@ -23,7 +23,7 @@ public class ServiceEndpoint {
     @ResponsePayload
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         if(validate(request)){
-            String orderID = sendOrderRequest(request);  //make request to Trade engine sending body {id, name, quantity, price, side}
+            String orderID = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
             ValidationResponse response = new ValidationResponse();
             response.setOrderID(orderID);
             response.setOrderstatus("Order validated");

@@ -7,5 +7,5 @@ deploy:
     provider: heroku
     on:
       branch: order-validation
-    app: order-validation
+    app: ordervalidation
     api_key: $HEROKU_API_KEY
