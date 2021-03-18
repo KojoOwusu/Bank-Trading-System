@@ -21,14 +21,7 @@ public class Order {
 
 	
 	
-	public Order() {
-		
-	}
-	
-
-	
-	
-
+	public Order() { }
 
 
 	public String getId() {
