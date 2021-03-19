@@ -19,7 +19,7 @@ public class PostController {
     @CrossOrigin
     @RequestMapping(value="/md", method= RequestMethod.POST, produces = "application/json", headers="Accept=*/*", consumes="application/json")
     @ResponseBody
-    public List<Trade> getMarketData(@RequestBody List<Trade> md){
+    public void getMarketData(@RequestBody List<Trade> md){
         var jedis= JedisConfig.createJedisClient();
         try {
              String stringifiedObject = objectMapper.writeValueAsString(md);
@@ -29,7 +29,6 @@ public class PostController {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        
-        return md;
+
     }
 }

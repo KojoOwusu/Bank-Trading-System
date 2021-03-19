@@ -1,7 +1,10 @@
 package com.ordervalidation.ordervalidationserver;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.ordervalidation.ordervalidationserver.jedisconfig.JedisConfig;
+import com.ordervalidation.ordervalidationserver.marketdata.Trade;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -14,6 +17,7 @@ import turntabl.trading.ordervalidservice.ValidateOrder;
 import turntabl.trading.ordervalidservice.ValidationResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 @Endpoint
 public class ServiceEndpoint {
@@ -26,17 +30,21 @@ public class ServiceEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "validateOrder")
     @ResponsePayload
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
-        if(validate(request)){
-            String orderID = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
-            ValidationResponse response = new ValidationResponse();
-            response.setOrderID(orderID);
-            response.setOrderstatus("Order validated");
-            return response;
-        }
-            ValidationResponse response = new ValidationResponse();
-            response.setOrderID("");
-            response.setOrderstatus("Order failed validation");
-            return response;
+        try {
+            if (validate(request)) {
+                String orderID = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
+                ValidationResponse response = new ValidationResponse();
+                response.setOrderID(orderID);
+                response.setOrderstatus("Order validated");
+                return response;
+            }
+
+        }catch (JsonProcessingException e){e.printStackTrace();}
+
+        ValidationResponse response = new ValidationResponse();
+        response.setOrderID("");
+        response.setOrderstatus("Order failed validation");
+        return response;
     }
 
     public String sendOrderRequest(ValidateOrder order){
@@ -49,8 +57,17 @@ public class ServiceEndpoint {
             return "order failed";
         }
     }
-
-    public Boolean validate(ValidateOrder request){return true; }  //this function should handle validation of order before even placing it.
+//getting subscribed market data
+    public Boolean validate(ValidateOrder request) throws JsonProcessingException {
+        String datastring = jedis.rpop("MD");
+        if (datastring.isEmpty()) {
+            return true;
+        }
+        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {
+        });
+        System.out.println(marketdata.get(0).getTICKER());
+        return true;
+    }
 }
 
 
