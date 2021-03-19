@@ -20,6 +20,7 @@ public class PostController {
         var jedis= JedisConfig.createJedisClient();
         try {
              String stringifiedObject = objectMapper.writeValueAsString(md);
+            System.out.println(stringifiedObject);
              jedis.lpush("MD", stringifiedObject);
 
         } catch (JsonProcessingException e) {
