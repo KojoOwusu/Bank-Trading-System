@@ -7,6 +7,6 @@ script:
 deploy:
   provider: heroku
   on:
-    branch: client-con-srver
+    branch: client-con-server
   app: client-con-server
   api_key: $HEROKU_API_KEY2
