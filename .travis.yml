@@ -1,0 +1,12 @@
+language: java
+jdk: openjdk11
+install: true
+script:
+  - cd client-con-server
+  - mvn clean verify
+deploy:
+  provider: heroku
+  on:
+    branch: client-con-srver
+  app: client-con-server
+  api_key: $HEROKU_API_KEY2
