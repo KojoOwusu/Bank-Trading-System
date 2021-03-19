@@ -1,9 +1,12 @@
 package com.ordervalidation.ordervalidationserver;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
+import com.ordervalidation.ordervalidationserver.jedisconfig.JedisConfig;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import redis.clients.jedis.Jedis;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -14,8 +17,9 @@ import java.io.IOException;
 
 @Endpoint
 public class ServiceEndpoint {
-    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
-
+    private Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
+    private Jedis jedis = JedisConfig.createJedisClient();
+    private ObjectMapper objectMapper = new ObjectMapper();
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
 
