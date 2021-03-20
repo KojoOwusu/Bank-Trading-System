@@ -79,9 +79,11 @@ public class OrderController {
 
     @RequestMapping(value = "/api/editorder", method=RequestMethod.PUT, produces = "application/json", consumes = "application/json", headers = "Accept=*/*")
     @ResponseBody
-    public String modifyOrder(@RequestParam String ID, @RequestBody Order o) {
-       APIInterfaces.EditOrderService service = retrofit.create(APIInterfaces.EditOrderService.class);
-       Call<String> req = service.editOrder(o, ID);
+    public String modifyOrder(@RequestParam String ID, @RequestParam String exchange, @RequestBody Order o) {
+        Call<String> req = null;
+        APIInterfaces.EditOrderService service;
+        service = exchange.equals("exchange1")?(retrofit.create(APIInterfaces.EditOrderService.class)):(retrofit2.create(APIInterfaces.EditOrderService.class));
+       req = service.editOrder(o, ID);
         try {
             Response<String> res = req.execute();
             if(res.body() == null)
