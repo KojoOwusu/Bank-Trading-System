@@ -32,11 +32,9 @@ public class ServiceEndpoint {
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         try {
             if (validate(request)) {
-                String orderID = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
-                ValidationResponse response = new ValidationResponse();
-                response.setOrderID(orderID);
-                response.setOrderstatus("Order validated");
-                return response;
+                ValidationResponse tradeServerResponse = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
+                tradeServerResponse.setOrderstatus("Order validated");
+                return tradeServerResponse;
             }
 
         }catch (JsonProcessingException e){e.printStackTrace();}
@@ -47,15 +45,19 @@ public class ServiceEndpoint {
         return response;
     }
 
-    public String sendOrderRequest(ValidateOrder order){
+    public ValidationResponse sendOrderRequest(ValidateOrder order){
         PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
-        Call<String> req = service.sendOrderRequest(order);
+        Call<ValidationResponse> req = service.sendOrderRequest(order);
         try {
             return req.execute().body();
         }catch (IOException e) {
             e.printStackTrace();
-            return "order failed";
         }
+        var ResponseObject = new ValidationResponse();
+        ResponseObject.setOrderID("");
+        ResponseObject.setOrderstatus("Connection error at Order validation");
+        return ResponseObject;
+
     }
 //getting subscribed market data
     public Boolean validate(ValidateOrder request) throws JsonProcessingException {
@@ -63,8 +65,7 @@ public class ServiceEndpoint {
         if (datastring.isEmpty()) {
             return true;
         }
-        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {
-        });
+        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
         System.out.println(marketdata.get(0).getTICKER());
         return true;
     }
