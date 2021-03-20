@@ -1,6 +1,6 @@
 package com.exchangeconnectivity.exchangeserver;
 import com.exchangeconnectivity.exchangeserver.resourceclasses.Order;
-import com.exchangeconnectivity.exchangeserver.resourceclasses.OrderResponse;
+import com.exchangeconnectivity.exchangeserver.resourceclasses.OrderStatus;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -25,7 +25,7 @@ public class APIInterfaces {
 
     public static interface GetOrder {
         @GET("8ec70649-0be5-4b5a-9e29-60bc424d7b60/order/{orderID}")
-        Call<OrderResponse> getOrderStatus(@Path("orderID") String orderId);
+        Call<OrderStatus> getOrderStatus(@Path("orderID") String orderId);
     }
 
 }

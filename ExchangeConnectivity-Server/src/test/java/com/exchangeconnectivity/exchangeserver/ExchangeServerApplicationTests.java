@@ -1,6 +1,6 @@
 package com.exchangeconnectivity.exchangeserver;
 
-import com.exchangeconnectivity.exchangeserver.resourceclasses.OrderResponse;
+import com.exchangeconnectivity.exchangeserver.resourceclasses.OrderStatus;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,10 +19,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.web.context.WebApplicationContext;
+
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 import java.io.IOException;
 
@@ -39,9 +38,9 @@ class ExchangeServerApplicationTests {
 
 	@Mock
 	APIInterfaces.GetOrder orderInterface;
-	Call<OrderResponse> response;
+	Call<OrderStatus> response;
 	Response res;
-	OrderResponse data;
+	OrderStatus data;
 
 	@Before
 	public void init() throws IOException {
