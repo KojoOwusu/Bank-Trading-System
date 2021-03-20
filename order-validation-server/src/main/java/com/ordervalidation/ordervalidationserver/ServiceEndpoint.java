@@ -24,7 +24,7 @@ import java.util.List;
 @Endpoint
 public class ServiceEndpoint {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
-   // private Jedis jedis = JedisConfig.createJedisClient();
+   private Jedis jedis = JedisConfig.createJedisClient();
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
@@ -37,6 +37,7 @@ public class ServiceEndpoint {
                 OrderResponse orderResponse = sendOrderRequest(request);
                 if (orderResponse.getOrderID().isEmpty()){
                     ValidationResponse response = new ValidationResponse();
+                    response.setOrderID(orderResponse.getOrderID());
                     response.setOrderstatus("failed to create order");
                     response.setSide(request.getSide());
                     response.setQuantity(request.getQuantity());
@@ -75,6 +76,9 @@ public class ServiceEndpoint {
         PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
         Call<OrderResponse> req = service.sendOrderRequest(order);
         try {
+            if(req.execute().body().getOrderID() == null){
+                return new OrderResponse("","");
+            }
             return req.execute().body();
         }catch (IOException e) {
             e.printStackTrace();
