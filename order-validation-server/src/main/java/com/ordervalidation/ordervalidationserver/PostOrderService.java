@@ -8,6 +8,6 @@ import turntabl.trading.ordervalidservice.ValidationResponse;
 public class PostOrderService {
     public static interface orderService {
         @POST("/api/trade")
-        Call<ValidationResponse> sendOrderRequest(@Body ValidateOrder order);
+        Call<String> sendOrderRequest(@Body ValidateOrder order);
     }
 }

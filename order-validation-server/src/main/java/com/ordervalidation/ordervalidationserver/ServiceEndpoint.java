@@ -32,9 +32,27 @@ public class ServiceEndpoint {
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         try {
             if (validate(request)) {
-                ValidationResponse tradeServerResponse = sendOrderRequest(request);  //make request to Trade engine sending body {product, quantity, price, side}
-                tradeServerResponse.setOrderstatus("Order validated");
-                return tradeServerResponse;
+                String orderID = sendOrderRequest(request);
+                if (orderID.isEmpty()){
+                    ValidationResponse response = new ValidationResponse();
+                    response.setOrderstatus("failed to create order");
+                    response.setSide(request.getSide());
+                    response.setOrderstatus("");
+                    response.setQuantity(request.getQuantity());
+                    response.setProduct(request.getProduct());
+                    response.setPrice(request.getPrice());
+                    return response;
+
+                }
+
+                ValidationResponse response = new ValidationResponse();
+                response.setOrderstatus("Order validated");
+                response.setOrderID(orderID);
+                response.setSide(request.getSide());
+               response.setQuantity(request.getQuantity());
+                response.setProduct(request.getProduct());
+                response.setPrice(request.getPrice());
+                return response;
             }
 
         }catch (JsonProcessingException e){e.printStackTrace();}
@@ -42,31 +60,32 @@ public class ServiceEndpoint {
         ValidationResponse response = new ValidationResponse();
         response.setOrderID("");
         response.setOrderstatus("Order failed validation");
+        response.setSide(request.getSide());
+        response.setQuantity(request.getQuantity());
+        response.setProduct(request.getProduct());
+        response.setPrice(request.getPrice());
         return response;
     }
 
-    public ValidationResponse sendOrderRequest(ValidateOrder order){
+    public String sendOrderRequest(ValidateOrder order){
         PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
-        Call<ValidationResponse> req = service.sendOrderRequest(order);
+        Call<String> req = service.sendOrderRequest(order);
         try {
             return req.execute().body();
         }catch (IOException e) {
             e.printStackTrace();
         }
-        var ResponseObject = new ValidationResponse();
-        ResponseObject.setOrderID("");
-        ResponseObject.setOrderstatus("Connection error at Order validation");
-        return ResponseObject;
-
+        return "";
     }
+
 //getting subscribed market data
     public Boolean validate(ValidateOrder request) throws JsonProcessingException {
-        String datastring = jedis.rpop("MD");
-        if (datastring.isEmpty()) {
-            return true;
-        }
-        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
-        System.out.println(marketdata.get(0).getTICKER());
+      //  String datastring = jedis.rpop("MD");
+       // if (datastring.isEmpty()) {
+        //    return true;
+        //}
+       // var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
+        //System.out.println(marketdata.get(0).getTICKER());
         return true;
     }
 }
