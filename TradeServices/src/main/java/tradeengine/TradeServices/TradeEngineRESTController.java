@@ -16,9 +16,15 @@ public class TradeEngineRESTController {
 @RequestMapping(method=RequestMethod.POST, value="/api/trade", produces = "application/json", consumes= "application/json")
 @ResponseBody
 public String receiveOrder(@RequestBody Order order) {
+    TradeOrder orderwithexchange = new TradeOrder();
+    orderwithexchange.setPrice(order.getPrice());
+    orderwithexchange.setProduct(order.getProduct());
+    orderwithexchange.setQuantity(order.getQuantity());
+    orderwithexchange.setSide(order.getSide());
+    orderwithexchange.setExchange("exchange1");
 
     var service = retrofit.create(OrderService.class);
-    var req = service.createOrder(order);
+    var req = service.createOrder(orderwithexchange);
     try {
 //        return req.execute().body();
 
@@ -28,6 +34,6 @@ public String receiveOrder(@RequestBody Order order) {
     } catch (java.io.IOException e) {
         e.printStackTrace();
     }
-return "NO";
+return "";
 };
 }

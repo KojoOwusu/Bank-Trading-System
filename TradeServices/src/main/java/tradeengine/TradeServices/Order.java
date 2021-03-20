@@ -7,6 +7,7 @@ public class Order {
         private String side;
 
 
+        public Order(){};
 
         public Order(String product, int quantity, float price, String side) {
             this.product = product;
@@ -40,5 +41,21 @@ public class Order {
         public void setSide(String side) {
             this.side = side;
         }
+
+    public String getProduct() {
+        return product;
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public String getSide() {
+        return side;
+    }
+}
 

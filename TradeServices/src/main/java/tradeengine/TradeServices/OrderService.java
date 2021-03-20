@@ -6,5 +6,5 @@ import retrofit2.http.POST;
 
 public interface OrderService {
     @POST("api/createorder")
-    Call<String> createOrder(@Body Order order);
+    Call<String> createOrder(@Body TradeOrder order);
 }
