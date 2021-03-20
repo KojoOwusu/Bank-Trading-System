@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.ordervalidation.ordervalidationserver.jedisconfig.JedisConfig;
+import com.ordervalidation.ordervalidationserver.marketdata.OrderResponse;
 import com.ordervalidation.ordervalidationserver.marketdata.Trade;
+import com.thoughtworks.qdox.model.expression.Or;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -22,7 +24,7 @@ import java.util.List;
 @Endpoint
 public class ServiceEndpoint {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
-    private Jedis jedis = JedisConfig.createJedisClient();
+   // private Jedis jedis = JedisConfig.createJedisClient();
     private ObjectMapper objectMapper = new ObjectMapper();
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
@@ -32,26 +34,27 @@ public class ServiceEndpoint {
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
         try {
             if (validate(request)) {
-                String orderID = sendOrderRequest(request);
-                if (orderID.isEmpty()){
+                OrderResponse orderResponse = sendOrderRequest(request);
+                if (orderResponse.getOrderID().isEmpty()){
                     ValidationResponse response = new ValidationResponse();
                     response.setOrderstatus("failed to create order");
                     response.setSide(request.getSide());
-                    response.setOrderstatus("");
                     response.setQuantity(request.getQuantity());
                     response.setProduct(request.getProduct());
                     response.setPrice(request.getPrice());
+                    response.setExchange(orderResponse.getExchange());
                     return response;
 
                 }
 
                 ValidationResponse response = new ValidationResponse();
                 response.setOrderstatus("Order validated");
-                response.setOrderID(orderID);
+                response.setOrderID(orderResponse.getOrderID());
                 response.setSide(request.getSide());
                response.setQuantity(request.getQuantity());
                 response.setProduct(request.getProduct());
                 response.setPrice(request.getPrice());
+                response.setExchange(orderResponse.getExchange());
                 return response;
             }
 
@@ -64,18 +67,19 @@ public class ServiceEndpoint {
         response.setQuantity(request.getQuantity());
         response.setProduct(request.getProduct());
         response.setPrice(request.getPrice());
+        response.setExchange("");
         return response;
     }
 
-    public String sendOrderRequest(ValidateOrder order){
+    public OrderResponse sendOrderRequest(ValidateOrder order){
         PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
-        Call<String> req = service.sendOrderRequest(order);
+        Call<OrderResponse> req = service.sendOrderRequest(order);
         try {
             return req.execute().body();
         }catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return new OrderResponse("","");
     }
 
 //getting subscribed market data
