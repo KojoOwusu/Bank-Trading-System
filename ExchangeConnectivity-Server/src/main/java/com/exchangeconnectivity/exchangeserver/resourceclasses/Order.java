@@ -1,10 +1,11 @@
 package com.exchangeconnectivity.exchangeserver.resourceclasses;
 
 public class Order {
-    private final String product;
-    private final int quantity;
-    private final double price;
-    private final String side;
+    private  String product;
+    private  int quantity;
+    private  double price;
+    private String side;
+
 
     public Order(String product, int quantity, double price, String side) {
         this.product = product;
