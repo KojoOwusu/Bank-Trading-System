@@ -16,11 +16,11 @@ public class PostController {
     @RequestMapping(value="/md", method= RequestMethod.POST, produces = "application/json", headers="Accept=*/*", consumes="application/json")
     @ResponseBody
     public void getMarketData(@RequestBody List<Trade> md){
-        var jedis= JedisConfig.createJedisClient();
+      //  var jedis= JedisConfig.createJedisClient();
         try {
              String stringifiedObject = objectMapper.writeValueAsString(md);
             System.out.println(stringifiedObject);
-             jedis.lpush("MD", stringifiedObject);
+         //    jedis.lpush("MD", stringifiedObject);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
