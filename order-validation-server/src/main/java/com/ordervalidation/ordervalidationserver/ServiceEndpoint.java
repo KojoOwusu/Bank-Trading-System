@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.ordervalidation.ordervalidationserver.jedisconfig.JedisConfig;
+import com.ordervalidation.ordervalidationserver.marketdata.MarketData;
 import com.ordervalidation.ordervalidationserver.marketdata.OrderResponse;
 import com.ordervalidation.ordervalidationserver.marketdata.Trade;
 import com.thoughtworks.qdox.model.expression.Or;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -24,8 +26,10 @@ import java.util.List;
 @Endpoint
 public class ServiceEndpoint {
     private Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
-   private Jedis jedis = JedisConfig.createJedisClient();
-    private ObjectMapper objectMapper = new ObjectMapper();
+   //private Jedis jedis = JedisConfig.createJedisClient();
+    //private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    MarketData MD;
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
 
@@ -76,10 +80,10 @@ public class ServiceEndpoint {
         PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
         Call<OrderResponse> req = service.sendOrderRequest(order);
         try {
-            if(req.execute().body().getOrderID() == null){
-                return new OrderResponse("","");
-            }
-            return req.execute().body();
+            OrderResponse res =req.execute().body();
+            if(res.getOrderID() == null)
+                return new OrderResponse(" "," ");
+            return res;
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,13 +92,24 @@ public class ServiceEndpoint {
 
 //getting subscribed market data
     public Boolean validate(ValidateOrder request) throws JsonProcessingException {
-       String datastring = jedis.rpop("MD");
+      /* String datastring = jedis.lpop("MD");
        if (datastring == null) {
             return true;
         }
         var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
         System.out.println(marketdata.get(0).getTICKER());
         return true;
+        */
+
+    try {
+        List<Trade> marketdata = MD.getData();
+
+        if (marketdata.get(0).getTICKER() == null) {
+            return false;
+        }
+        marketdata.stream().forEach(x -> System.out.println(x.getTICKER()));
+    }catch(NullPointerException e ){};
+    return true;
     }
 }
 
