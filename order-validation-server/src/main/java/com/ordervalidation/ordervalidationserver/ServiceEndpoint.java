@@ -88,12 +88,12 @@ public class ServiceEndpoint {
 
 //getting subscribed market data
     public Boolean validate(ValidateOrder request) throws JsonProcessingException {
-      //  String datastring = jedis.rpop("MD");
-       // if (datastring.isEmpty()) {
-        //    return true;
-        //}
-       // var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
-        //System.out.println(marketdata.get(0).getTICKER());
+       String datastring = jedis.rpop("MD");
+       if (datastring == null) {
+            return true;
+        }
+        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
+        System.out.println(marketdata.get(0).getTICKER());
         return true;
     }
 }
