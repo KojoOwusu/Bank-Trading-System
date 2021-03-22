@@ -6,7 +6,7 @@ public class Order {
     private  double price;
     private String side;
 
-
+    public Order(){};
     public Order(String product, int quantity, double price, String side) {
         this.product = product;
         this.quantity = quantity;
@@ -28,5 +28,21 @@ public class Order {
 
     public String getSide() {
         return side;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setSide(String side) {
+        this.side = side;
     }
 }

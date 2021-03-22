@@ -14,25 +14,6 @@ public class OrderController {
     private Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl("https://exchange.matraining.com").build();
     private Retrofit retrofit2 = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl("https://exchange2.matraining.com").build();
 
-    //CREATE ORDER  /api/createorder
-
-    @RequestMapping(value = "/api/createorder", method=RequestMethod.POST,produces = "application/json",headers = "Accept=*/*", consumes="application/json")
-    @ResponseBody
-    public  OrderResponse createOrder(@RequestBody TradeOrder newOrder) {
-        Call<String> req = null;
-        APIInterfaces.CreateOrderService service;
-        service = newOrder.getExchange().equals("exchange1")?(retrofit.create(APIInterfaces.CreateOrderService.class)):(retrofit2.create(APIInterfaces.CreateOrderService.class));
-        req = service.createOrder(new Order(newOrder.getProduct(),newOrder.getQuantity(), newOrder.getPrice(), newOrder.getSide()));
-        try {
-            Response<String> res = req.execute();
-            OrderResponse o = new OrderResponse(res.body(), newOrder.getExchange());
-            return o;
-
-
-        }catch(java.io.IOException e){}
-        catch(java.lang.IllegalArgumentException e){e.getMessage();}
-        return new OrderResponse("",newOrder.getExchange());
-    }
 
     //GET ORDER STATUS /api/getorder
 
