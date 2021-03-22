@@ -5,6 +5,7 @@ public class Order {
         private int quantity;
         private float price;
         private String side;
+        private int portfolioID;
 
 
         public Order(){};
