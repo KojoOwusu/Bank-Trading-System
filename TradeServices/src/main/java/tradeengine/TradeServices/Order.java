@@ -1,23 +1,30 @@
 package tradeengine.TradeServices;
 
+import java.math.BigDecimal;
+
 public class Order {
         private String product;
         private int quantity;
         private float price;
         private String side;
         private int portfolioID;
+        private double funds;
+        private int quantityOwned;
 
 
         public Order(){};
 
-        public Order(String product, int quantity, float price, String side) {
-            this.product = product;
-            this.quantity = quantity;
-            this.price = price;
-            this.side = side;
-        }
+    public Order(String product, int quantity, float price, String side, int portfolioID, double funds, int quantityOwned) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+        this.side = side;
+        this.portfolioID = portfolioID;
+        this.funds = funds;
+        this.quantityOwned = quantityOwned;
+    }
 
-        @Override
+    @Override
         public String toString() {
             return "Order{" +
                     "product='" + product + '\'' +
@@ -43,6 +50,30 @@ public class Order {
             this.side = side;
         }
 
+    public void setPortfolioID(int portfolioID) {
+        this.portfolioID = portfolioID;
+    }
+
+    public void setFunds(double funds) {
+        this.funds = funds;
+    }
+
+    public void setQuantityOwned(int quantityOwned) {
+        this.quantityOwned = quantityOwned;
+    }
+
+    public int getPortfolioID() {
+        return portfolioID;
+    }
+
+    public double getFunds() {
+        return funds;
+    }
+
+    public int getQuantityOwned() {
+        return quantityOwned;
+    }
+
     public String getProduct() {
         return product;
     }
@@ -58,5 +89,7 @@ public class Order {
     public String getSide() {
         return side;
     }
+
+
 }
 

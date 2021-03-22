@@ -15,8 +15,6 @@ public class TradeEngineRESTController {
     @Autowired
     MarketData MD;
 
-
-
 @RequestMapping(method = RequestMethod.POST, value="/md", consumes = "application/json")
 @ResponseBody
 public void receiveMarketData(@RequestBody List<TradeData> md){
