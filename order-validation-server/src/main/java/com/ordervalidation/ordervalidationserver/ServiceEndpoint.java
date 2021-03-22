@@ -7,6 +7,7 @@ import com.ordervalidation.ordervalidationserver.jedisconfig.JedisConfig;
 import com.ordervalidation.ordervalidationserver.marketdata.MarketData;
 import com.ordervalidation.ordervalidationserver.marketdata.OrderResponse;
 import com.ordervalidation.ordervalidationserver.marketdata.Trade;
+import com.ordervalidation.ordervalidationserver.validation.Validator;
 import com.thoughtworks.qdox.model.expression.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -25,91 +26,47 @@ import java.util.List;
 
 @Endpoint
 public class ServiceEndpoint {
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl("https://trade-services.herokuapp.com").addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create())).build();
-   //private Jedis jedis = JedisConfig.createJedisClient();
-    //private ObjectMapper objectMapper = new ObjectMapper();
+
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     MarketData MD;
+
+    @Autowired
+    Jedis jedis;
     private static final String NAMESPACE_URI = "http://turntabl/trading/ordervalidservice";
 
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "validateOrder")
     @ResponsePayload
-    public ValidationResponse validateOrder(@RequestPayload ValidateOrder request){
-        try {
-            if (validate(request)) {
-                OrderResponse orderResponse = sendOrderRequest(request);
-                if (orderResponse.getOrderID().isEmpty()){
-                    ValidationResponse response = new ValidationResponse();
-                    response.setOrderID(orderResponse.getOrderID());
-                    response.setOrderstatus("failed to create order");
-                    response.setSide(request.getSide());
-                    response.setQuantity(request.getQuantity());
-                    response.setProduct(request.getProduct());
-                    response.setPrice(request.getPrice());
-                    response.setExchange(orderResponse.getExchange());
-                    return response;
-
-                }
-
-                ValidationResponse response = new ValidationResponse();
-                response.setOrderstatus("Order validated");
-                response.setOrderID(orderResponse.getOrderID());
-                response.setSide(request.getSide());
-               response.setQuantity(request.getQuantity());
-                response.setProduct(request.getProduct());
-                response.setPrice(request.getPrice());
-                response.setExchange(orderResponse.getExchange());
-                return response;
-            }
-
-        }catch (JsonProcessingException e){e.printStackTrace();}
-
+    public ValidationResponse validateOrder(@RequestPayload ValidateOrder request) {
+        if (validate(request)) {
+            try {
+                String jsonString = serializeObject(request);
+                jedis.publish("Channel#tradeengine", jsonString);
+            }catch(JsonProcessingException e){}
+            ValidationResponse response = new ValidationResponse();
+            response.setOrderstatus("Order validated successfully");
+            return response;
+        }
         ValidationResponse response = new ValidationResponse();
-        response.setOrderID("");
-        response.setOrderstatus("Order failed validation");
-        response.setSide(request.getSide());
-        response.setQuantity(request.getQuantity());
-        response.setProduct(request.getProduct());
-        response.setPrice(request.getPrice());
-        response.setExchange("");
+        response.setOrderstatus("Order validation failed");
         return response;
+
     }
 
-    public OrderResponse sendOrderRequest(ValidateOrder order){
-        PostOrderService.orderService service = retrofit.create(PostOrderService.orderService.class);
-        Call<OrderResponse> req = service.sendOrderRequest(order);
-        try {
-            OrderResponse res =req.execute().body();
-            if(res.getOrderID() == null)
-                return new OrderResponse(" "," ");
-            return res;
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new OrderResponse("","");
+    private String serializeObject(ValidateOrder o) throws JsonProcessingException {
+            return objectMapper.writeValueAsString(o);
     }
 
-//getting subscribed market data
-    public Boolean validate(ValidateOrder request) throws JsonProcessingException {
-      /* String datastring = jedis.lpop("MD");
-       if (datastring == null) {
-            return true;
-        }
-        var marketdata = objectMapper.readValue(datastring, new TypeReference<List<Trade>>() {});
-        System.out.println(marketdata.get(0).getTICKER());
-        return true;
-        */
-
+//validating order
+    private Boolean validate(ValidateOrder request)  {
     try {
         List<Trade> marketdata = MD.getData();
-
-        if (marketdata.get(0).getTICKER() == null) {
-            return false;
-        }
-        marketdata.stream().forEach(x -> System.out.println(x.getTICKER()));
+        var tradeObject = marketdata.stream().filter(x->x.getTICKER().equals(request.getProduct())).findFirst().get();
+        Validator validator = new Validator(tradeObject, request);
+        return validator.validate();
     }catch(NullPointerException e ){};
-    return true;
+    return false;
     }
 }
 
