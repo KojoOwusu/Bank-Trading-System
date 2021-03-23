@@ -22,7 +22,7 @@ public class OrdersPubSub extends JedisPubSub {
            //insert trade engine logic here
            TradeOrder tradeOrder = new TradeOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getPortfolioID(), order.getFunds(), order.getQuantityOwned(), "exchange1");
            //send on to queue
-           jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
+         //  jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
        }catch (JsonProcessingException e){};
     }
 
