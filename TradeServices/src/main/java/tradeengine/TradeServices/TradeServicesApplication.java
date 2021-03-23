@@ -19,6 +19,6 @@ public class TradeServicesApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		jedis.subscribe(new OrdersPubSub(), "Channel#Orders");
+		jedis.subscribe(new OrdersPubSub(), "Channel#tradeengine");
 	}
 }
