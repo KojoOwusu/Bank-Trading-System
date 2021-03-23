@@ -10,7 +10,13 @@ import tradeengine.TradeServices.TradeOrder;
 
 public class OrdersPubSub extends JedisPubSub {
 
-    Jedis jedis = new Jedis();
+            private Jedis jedis;
+
+          public OrdersPubSub(){
+           jedis=new Jedis("redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349);
+           jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
+          }
+
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -22,7 +28,7 @@ public class OrdersPubSub extends JedisPubSub {
            //insert trade engine logic here
            TradeOrder tradeOrder = new TradeOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getPortfolioID(), order.getFunds(), order.getQuantityOwned(), "exchange1");
            //send on to queue
-         //  jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
+         jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
        }catch (JsonProcessingException e){};
     }
 
