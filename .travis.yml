@@ -10,3 +10,4 @@ deploy:
     branch: TradeServices
   app: trade-services
   api_key: $HEROKU_API_KEY
+  run: heroku logs --tail --app trade-services
