@@ -19,7 +19,7 @@ public class TradeEngineRESTController {
 @RequestMapping(method = RequestMethod.POST, value="/md", consumes = "application/json")
 @ResponseBody
 public void receiveMarketData(@RequestBody List<TradeData> md){
-    MD.setData(md);
+    MD.setData1(md);
 }
 
 
@@ -27,7 +27,7 @@ public void receiveMarketData(@RequestBody List<TradeData> md){
 @RequestMapping(method = RequestMethod.POST, value="/md2", consumes = "application/json")
 @ResponseBody
 public void receiveMarketData2(@RequestBody List<TradeData> md){
-        //MD.setData(md);
+        MD.setData2(md);
     }
 }
 
