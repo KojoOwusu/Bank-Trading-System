@@ -1,6 +1,7 @@
 package tradeengine.TradeServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,12 +14,17 @@ public class TradeServicesApplication implements ApplicationRunner {
 	@Autowired
 	Jedis jedis;
 
+	@Value("${run.with.runner}")
+	String env;
+
 	public static void main(String[] args) {
 		SpringApplication.run(TradeServicesApplication.class, args);
 	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		jedis.subscribe(new OrdersPubSub(), "Channel#tradeengine");
+		if(env.equals("true")){
+			jedis.subscribe(new OrdersPubSub(), "Channel#tradeengine");
+		}
 	}
 }
