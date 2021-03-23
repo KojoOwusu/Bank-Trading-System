@@ -18,6 +18,10 @@ public class TradeOrder extends Order{
         this.exchange = exchange;
     }
 
+    public int getPortfolioID() {
+        return portfolioID;
+    }
+
     public double getFunds() {
         return funds;
     }
@@ -30,14 +34,6 @@ public class TradeOrder extends Order{
         return exchange;
     }
 
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
-    public int getPortfolioID() {
-        return portfolioID;
-    }
-
     public void setPortfolioID(int portfolioID) {
         this.portfolioID = portfolioID;
     }
@@ -48,5 +44,9 @@ public class TradeOrder extends Order{
 
     public void setQuantityOwned(int quantityOwned) {
         this.quantityOwned = quantityOwned;
+    }
+
+    public void setExchange(String exchange) {
+        this.exchange = exchange;
     }
 }
