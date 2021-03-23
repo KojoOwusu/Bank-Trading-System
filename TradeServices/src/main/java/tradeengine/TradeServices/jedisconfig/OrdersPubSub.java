@@ -17,7 +17,7 @@ public class OrdersPubSub extends JedisPubSub {
     @Override
     public void onMessage(String channel, String message) {
         try {
-            jedisclient.publish("Channel#exchangecon", "Trade engine processing order");
+            jedisclient.publish("Channel#processing", "Trade engine processing order");
             Order order = objectMapper.readValue(message, Order.class);
 
 
