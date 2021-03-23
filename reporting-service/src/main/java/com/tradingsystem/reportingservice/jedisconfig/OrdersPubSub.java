@@ -5,7 +5,7 @@ import redis.clients.jedis.JedisPubSub;
 public class OrdersPubSub extends JedisPubSub {
     @Override
     public void onMessage(String channel, String message) {
-        System.out.println(String.format("Channel: %s Message: %s",channel, message));
+        System.out.printf("Channel: %s Message: %s%n",channel, message);
     }
 
     @Override
