@@ -3,7 +3,7 @@ jdk: openjdk11
 install: true
 script:
   - cd TradeServices
-  - mvn clean verify
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 deploy:
   provider: heroku
   on:

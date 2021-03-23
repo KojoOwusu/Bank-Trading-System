@@ -23,8 +23,8 @@ public class TradeServicesApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		if(env.equals("true")){
+		//if(env.equals("true")){
 			jedis.subscribe(new OrdersPubSub(), "Channel#tradeengine");
-		}
+	//	}
 	}
 }
