@@ -22,6 +22,6 @@ public class ReportingServiceApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		jedis.subscribe(ordersPubSub,"Channel#completed");
+		jedis.subscribe(ordersPubSub,"Channel#completed","Channel#client","Channel#ordervalidation","Channel#");
 	}
 }
