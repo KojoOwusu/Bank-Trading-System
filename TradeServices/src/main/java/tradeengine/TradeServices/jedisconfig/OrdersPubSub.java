@@ -9,27 +9,21 @@ import tradeengine.TradeServices.Order;
 import tradeengine.TradeServices.TradeOrder;
 
 public class OrdersPubSub extends JedisPubSub {
-    @Autowired
-    Jedis jedisclient;
+
+    Jedis jedis = new Jedis();
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onMessage(String channel, String message) {
-        try {
-            jedisclient.publish("Channel#processing", "Trade engine processing order");
-            Order order = objectMapper.readValue(message, Order.class);
-
-
-            //insert trade engine logic here
-
-            TradeOrder tradeOrder = new TradeOrder(order.getProduct(),order.getQuantity(),order.getPrice(),order.getSide(), order.getPortfolioID(), order.getFunds(), order.getQuantityOwned(), "exchange1");
-            //send on to queue
-            jedisclient.lpush("Queue#pending",objectMapper.writeValueAsString(tradeOrder));
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+       jedis.publish("Channel#processing", "Trade engine processing order");
+       try {
+           Order order = objectMapper.readValue(message, Order.class);
+           //insert trade engine logic here
+           TradeOrder tradeOrder = new TradeOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getPortfolioID(), order.getFunds(), order.getQuantityOwned(), "exchange1");
+           //send on to queue
+           jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
+       }catch (JsonProcessingException e){};
     }
 
     @Override
