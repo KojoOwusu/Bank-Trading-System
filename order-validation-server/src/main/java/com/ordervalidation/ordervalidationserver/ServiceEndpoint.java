@@ -39,6 +39,7 @@ public class ServiceEndpoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "validateOrder")
     @ResponsePayload
     public ValidationResponse validateOrder(@RequestPayload ValidateOrder request) {
+        jedis.publish("Reporting#ordervalidation","Validating order");
         if (validate(request)) {
             try {
                 String jsonString = serializeObject(request);
