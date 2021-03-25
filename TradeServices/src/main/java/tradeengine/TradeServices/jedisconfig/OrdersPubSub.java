@@ -6,16 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 import tradeengine.TradeServices.Order;
+import tradeengine.TradeServices.Services.TradeengineService;
 import tradeengine.TradeServices.TradeOrder;
 
 public class OrdersPubSub extends JedisPubSub {
+    @Autowired
+    TradeengineService tradeengineService;
 
-            private Jedis jedis;
-
-          public OrdersPubSub(){
-           jedis=new Jedis("redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349);
-           jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
-          }
+    private Jedis jedis;
+    public OrdersPubSub(){
+        jedis=new Jedis("redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349);
+        jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
+    }
 
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -26,8 +28,9 @@ public class OrdersPubSub extends JedisPubSub {
        try {
            Order order = objectMapper.readValue(message, Order.class);
            //insert trade engine logic here
-           TradeOrder tradeOrder = new TradeOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getPortfolioID(), order.getFunds(), order.getQuantityOwned(), "exchange1");
-           //send on to queue
+            tradeengineService.setOrderRequest(order);
+            TradeOrder tradeOrder = tradeengineService.trade();
+
          jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
        }catch (JsonProcessingException e){};
     }

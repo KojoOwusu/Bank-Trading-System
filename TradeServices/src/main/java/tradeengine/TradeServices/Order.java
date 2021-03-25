@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class Order {
         private String product;
         private int quantity;
-        private float price;
+        private double price;
         private String side;
         private int portfolioID;
         private double funds;
@@ -14,7 +14,7 @@ public class Order {
 
         public Order(){};
 
-    public Order(String product, int quantity, float price, String side, int portfolioID, double funds, int quantityOwned) {
+    public Order(String product, int quantity, double price, String side, int portfolioID, double funds, int quantityOwned) {
         this.product = product;
         this.quantity = quantity;
         this.price = price;
@@ -42,7 +42,7 @@ public class Order {
             this.quantity = quantity;
         }
 
-        public void setPrice(float price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -82,7 +82,7 @@ public class Order {
         return quantity;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 

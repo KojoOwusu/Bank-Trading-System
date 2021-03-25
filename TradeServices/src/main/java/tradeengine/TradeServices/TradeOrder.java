@@ -5,7 +5,7 @@ public class TradeOrder extends Order{
 
     public TradeOrder(){};
 
-    public TradeOrder(String product, int quantity, float price, String side, int portfolioID, double funds, int quantityOwned, String exchange) {
+    public TradeOrder(String product, int quantity, double price, String side, int portfolioID, double funds, int quantityOwned, String exchange) {
         super(product, quantity, price, side, portfolioID, funds, quantityOwned);
         this.exchange = exchange;
     }
