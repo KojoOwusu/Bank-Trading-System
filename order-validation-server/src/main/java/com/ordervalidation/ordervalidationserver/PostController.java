@@ -21,18 +21,14 @@ public class PostController {
     @RequestMapping(value="/md", method= RequestMethod.POST, produces = "application/json", headers="Accept=*/*", consumes="application/json")
     @ResponseBody
     public void getMarketData(@RequestBody List<Trade> md){
-      //  var jedis= JedisConfig.createJedisClient();
-        /*try {
-             String stringifiedObject = objectMapper.writeValueAsString(md);
-            System.out.println(stringifiedObject);
-         //    jedis.lpush("MD", stringifiedObject);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-*/
             MD.setData(md);
-
     }
+
+    @RequestMapping(value="/md2", method= RequestMethod.POST, produces = "application/json", headers="Accept=*/*", consumes="application/json")
+    @ResponseBody
+    public void getMarketData2(@RequestBody List<Trade> md){
+        MD.setData2(md);
+    }
+
 
 }

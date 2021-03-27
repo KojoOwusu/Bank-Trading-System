@@ -63,11 +63,17 @@ public class ServiceEndpoint {
     private Boolean validate(ValidateOrder request)  {
     try {
         List<Trade> marketdata = MD.getData();
-        var tradeObject = marketdata.stream().filter(x->x.getTICKER().equals(request.getProduct())).findFirst().get();
-        Validator validator = new Validator(tradeObject, request);
-        return validator.validate();
+        List<Trade> marketdata2 = MD.getData2();
+        Validator validator = validatorFactory(marketdata, request);
+        Validator validator2 = validatorFactory(marketdata2, request);
+        return validator.validate() || validator2.validate();
     }catch(NullPointerException e ){};
     return false;
+    }
+
+    private Validator validatorFactory(List<Trade> marketdata, ValidateOrder request){
+        Trade tradeObjet = marketdata.stream().filter(x->x.getTICKER().equals(request.getProduct())).findFirst().get();
+            return new Validator(tradeObjet, request);
     }
 }
 
