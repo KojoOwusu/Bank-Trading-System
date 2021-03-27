@@ -8,6 +8,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@CrossOrigin
 @RestController
 public class OrderController {
     //create Retrofit service for making requests
@@ -76,5 +80,19 @@ public class OrderController {
         return "failed to edit orderID: "+ID;
 
         // return "true";
+    }
+
+
+    @RequestMapping(value="/api/orderbook", method=RequestMethod.GET ,produces="application/json")
+   @ResponseBody
+    public List<OrderStatus> fetchFromOrderbook(@RequestParam String product, @RequestParam String side, @RequestParam String exchange){
+        Call<List<OrderStatus>> req;
+        APIInterfaces.OrderBookQuery serviceInterface;
+        serviceInterface = exchange.equals("exchange1")?(retrofit.create(APIInterfaces.OrderBookQuery.class)):(retrofit2.create(APIInterfaces.OrderBookQuery.class));
+        try {
+            Response<List<OrderStatus>> res = serviceInterface.getOrderBooks(product, side).execute();
+                return res.body();
+        }catch (java.io.IOException e){}
+        return new ArrayList<OrderStatus>();
     }
 }
