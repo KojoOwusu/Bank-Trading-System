@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.sound.sampled.Port;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -43,6 +42,12 @@ public class TradeOrder implements Serializable {
 
     @Column(nullable = false)
     private String exchange;
+
+    @Column(nullable = false)
+    private int executions = 0;
+    //store cumulative quantity which will be zero from start
+
+
 
     public String getOrderid() {
         return orderid;
@@ -84,6 +89,10 @@ public class TradeOrder implements Serializable {
         return exchange;
     }
 
+    public int getExecutions() {
+        return executions;
+    }
+
     public void setOrderid(String orderid) {
         this.orderid = orderid;
     }
@@ -118,6 +127,10 @@ public class TradeOrder implements Serializable {
 
     public void setExchange(String exchange) {
         this.exchange = exchange;
+    }
+
+    public void setExecutions(int executions) {
+        this.executions = executions;
     }
 }
 

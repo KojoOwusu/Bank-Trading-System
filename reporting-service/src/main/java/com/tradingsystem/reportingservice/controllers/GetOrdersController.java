@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class GetOrdersController {
@@ -16,8 +17,7 @@ public class GetOrdersController {
     @CrossOrigin
     @RequestMapping(value = "/orders", method= RequestMethod.GET, produces = "application/json", headers="Accept=*/*", consumes="application/json")
     @ResponseBody
-    public List<TradeOrder> listAllOrders(){
-
-        return orderRepository.findAll();
+    public List<String> listAllOrders(){
+        return orderRepository.findallIDs();
     }
 }

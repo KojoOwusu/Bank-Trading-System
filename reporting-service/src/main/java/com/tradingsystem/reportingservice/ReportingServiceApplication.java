@@ -14,8 +14,6 @@ public class ReportingServiceApplication implements ApplicationRunner {
 	@Autowired
 	OrdersPubSub ordersPubSub;
 
-	@Value("${run.with.runner}")
-	String env;
 
 	@Autowired
 	Jedis jedis;
@@ -28,7 +26,7 @@ public class ReportingServiceApplication implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 	//	if(env.equals("true")){
 			//get update from all microservices
-			jedis.subscribe(ordersPubSub,"Channel#completed","Reporting#client","Reporting#ordervalidation","Channel#processing");
+		//	jedis.subscribe(ordersPubSub,"Channel#completed","Reporting#client","Reporting#ordervalidation","Channel#processing");
 	//	}
 	}
 }
