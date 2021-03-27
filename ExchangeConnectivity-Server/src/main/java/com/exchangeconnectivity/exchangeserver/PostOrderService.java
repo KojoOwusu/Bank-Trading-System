@@ -36,10 +36,10 @@ public class PostOrderService {
                 try {
                     String orderID = executeRequest();
                     if (orderID == null) {
-                        OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "failed", "");
+                        OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "failed", "", 0);
                         jedis.publish("Channel#completed", serializeObject(openOrder));
                     }
-                    OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "open", orderID);
+                    OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "open", orderID, 0);
                     jedis.publish("Channel#completed", serializeObject(openOrder));
                 } catch (java.io.IOException e) { }
             }
