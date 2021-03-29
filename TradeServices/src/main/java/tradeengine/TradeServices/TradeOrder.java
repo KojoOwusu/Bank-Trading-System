@@ -17,5 +17,12 @@ public class TradeOrder extends Order{
     public void setExchange(String exchange) {
         this.exchange = exchange;
     }
+
+    @Override
+    public String toString() {
+        return "TradeOrder{" +
+                "exchange='" + exchange + '\'' +
+                '}';
+    }
 }
 

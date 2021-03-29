@@ -77,4 +77,5 @@ public class TradeData {
     public void setBUY_LIMIT(int BUY_LIMIT) {
         this.BUY_LIMIT = BUY_LIMIT;
     }
+
 }

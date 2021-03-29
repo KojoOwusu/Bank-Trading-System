@@ -11,7 +11,6 @@ public class Order {
         private double funds;
         private int quantityOwned;
 
-
         public Order(){};
 
     public Order(String product, int quantity, double price, String side, int portfolioID, double funds, int quantityOwned) {
@@ -25,53 +24,16 @@ public class Order {
     }
 
     @Override
-        public String toString() {
-            return "Order{" +
-                    "product='" + product + '\'' +
-                    ", quantity=" + quantity +
-                    ", price=" + price +
-                    ", side='" + side +
-                    '}';
-        }
-
-        public void setProduct(String product) {
-            this.product = product;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public void setSide(String side) {
-            this.side = side;
-        }
-
-    public void setPortfolioID(int portfolioID) {
-        this.portfolioID = portfolioID;
-    }
-
-    public void setFunds(double funds) {
-        this.funds = funds;
-    }
-
-    public void setQuantityOwned(int quantityOwned) {
-        this.quantityOwned = quantityOwned;
-    }
-
-    public int getPortfolioID() {
-        return portfolioID;
-    }
-
-    public double getFunds() {
-        return funds;
-    }
-
-    public int getQuantityOwned() {
-        return quantityOwned;
+    public String toString() {
+        return "Order{" +
+                "product='" + product + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", side='" + side + '\'' +
+                ", portfolioID=" + portfolioID +
+                ", funds=" + funds +
+                ", quantityOwned=" + quantityOwned +
+                '}';
     }
 
     public String getProduct() {
@@ -90,6 +52,44 @@ public class Order {
         return side;
     }
 
+    public int getPortfolioID() {
+        return portfolioID;
+    }
 
+    public double getFunds() {
+        return funds;
+    }
+
+    public int getQuantityOwned() {
+        return quantityOwned;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setSide(String side) {
+        this.side = side;
+    }
+
+    public void setPortfolioID(int portfolioID) {
+        this.portfolioID = portfolioID;
+    }
+
+    public void setFunds(double funds) {
+        this.funds = funds;
+    }
+
+    public void setQuantityOwned(int quantityOwned) {
+        this.quantityOwned = quantityOwned;
+    }
 }
 

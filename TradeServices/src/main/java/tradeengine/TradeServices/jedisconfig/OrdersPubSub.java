@@ -9,30 +9,33 @@ import tradeengine.TradeServices.Order;
 import tradeengine.TradeServices.Services.TradeengineService;
 import tradeengine.TradeServices.TradeOrder;
 
+import java.util.List;
+
 public class OrdersPubSub extends JedisPubSub {
+
     @Autowired
-    TradeengineService tradeengineService;
+    private TradeengineService tradeengineService;
 
     private Jedis jedis;
     public OrdersPubSub(){
-        jedis=new Jedis("redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349);
-        jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
+        jedis=new Jedis();
+     //   jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
+
+        //"redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349
     }
-
-
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onMessage(String channel, String message) {
        jedis.publish("Channel#processing", "Trade engine processing order");
        try {
+           ObjectMapper objectMapper = new ObjectMapper();
            Order order = objectMapper.readValue(message, Order.class);
-           //insert trade engine logic here
-            tradeengineService.setOrderRequest(order);
-            TradeOrder tradeOrder = tradeengineService.trade();
+           System.out.println(order.toString());
 
-         jedis.lpush("Queue#pending", objectMapper.writeValueAsString(tradeOrder));
-       }catch (JsonProcessingException e){};
+            tradeengineService.init(order, jedis);
+            tradeengineService.match();
+
+       }catch (JsonProcessingException e){e.printStackTrace();};
     }
 
     @Override
