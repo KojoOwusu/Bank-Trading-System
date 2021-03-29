@@ -24,9 +24,9 @@ public class ReportingServiceApplication implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-	//	if(env.equals("true")){
+	//if(env.equals("true")){
 			//get update from all microservices
-		//	jedis.subscribe(ordersPubSub,"Channel#completed","Reporting#client","Reporting#ordervalidation","Channel#processing");
+		jedis.subscribe(ordersPubSub,"Channel#completed","Reporting#client","Reporting#ordervalidation","Channel#processing");
 	//	}
 	}
 }

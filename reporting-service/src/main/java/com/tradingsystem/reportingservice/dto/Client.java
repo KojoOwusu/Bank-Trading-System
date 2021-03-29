@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Client implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long clientid;
 
     @Column(nullable = false)
@@ -27,6 +27,9 @@ public class Client implements Serializable {
 
     @OneToMany(mappedBy="client", cascade = CascadeType.ALL)
     private List<Portfolio> portfolios;
+
+    @OneToMany(mappedBy="client", cascade = CascadeType.ALL)
+    private List<ProductsOwned> productsOwned;
 
     public Long getClientid() {
         return clientid;
@@ -58,6 +61,10 @@ public class Client implements Serializable {
 
     public void setClientid(Long clientid) {
         this.clientid = clientid;
+    }
+
+    public List<ProductsOwned> getProductsOwned() {
+        return productsOwned;
     }
 
     public void setFirstname(String firstname) {

@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tradingsystem.reportingservice.OpenOrder;
 import com.tradingsystem.reportingservice.dao.OrderRepository;
 import com.tradingsystem.reportingservice.dao.PortfolioRepository;
+import com.tradingsystem.reportingservice.dao.ProductsOwnedRepo;
+import com.tradingsystem.reportingservice.dao.ProductsRepository;
 import com.tradingsystem.reportingservice.dto.Portfolio;
+import com.tradingsystem.reportingservice.dto.ProductsOwned;
 import com.tradingsystem.reportingservice.dto.TradeOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.JedisPubSub;
@@ -18,6 +21,10 @@ public class OrdersPubSub extends JedisPubSub {
     private OrderRepository orderRepository;
     @Autowired
     private PortfolioRepository portfolioRepository;
+    @Autowired
+    private ProductsOwnedRepo productsOwnedRepo;
+    @Autowired
+    private ProductsRepository productsRepository;
 
     @Override
     public void onMessage(String channel, String message) {
@@ -38,6 +45,12 @@ public class OrdersPubSub extends JedisPubSub {
 
         orderRepository.save(tradeOrder);
         System.out.println("Saved order: "+ tradeOrder.getOrderid() +" to the database");
+        var ProductsOwned = new ProductsOwned();
+        ProductsOwned.setClient(portfolio.getClient());
+        ProductsOwned.setQuantityOwned(0);
+        ProductsOwned.setProduct(productsRepository.findByTicker(tradeOrder.getProductname()).get());
+        productsOwnedRepo.save(ProductsOwned);
+
 
         }catch(JsonProcessingException e){}
     }

@@ -1,5 +1,6 @@
 package com.tradingsystem.reportingservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -10,11 +11,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 @EnableAsync
 public class SpringConfig {
-    private ScheduledOrderStatus orderStatusChecker = new ScheduledOrderStatus();
+
+    @Autowired
+    private ScheduledOrderStatus orderStatusChecker;
 
    @Scheduled(fixedRate = 60000)
    @Async
    public void run(){
-            orderStatusChecker.run();
+          //  orderStatusChecker.run();
    }
 }

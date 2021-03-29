@@ -23,9 +23,9 @@ public interface OrderRepository extends JpaRepository<TradeOrder, Long> {
     @Query(value = "SELECT orderid FROM TradeOrder")
     List<String> findallIDs();
 
-    @Modifying
-    @Query("update TradeOrder t set t.orderstatus = :orderstatus where t.orderid=:orderid")
-    int updateOrderStatus(@Param("orderstatus") String status, @Param("orderid")String orderid);
+        @Modifying
+        @Query("update TradeOrder t set t.orderstatus = :orderstatus where t.orderid=:orderid")
+        int updateOrderStatus(@Param("orderstatus") String status, @Param("orderid")String orderid);
 
     @Modifying
     @Query("update TradeOrder t set t.executions = :executions where t.orderid=:orderid")
