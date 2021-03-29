@@ -19,16 +19,21 @@ public class OrderValidationServerApplication implements ApplicationRunner {
 	MarketData MD;
 
 	private Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl("https://exchange.matraining.com").build();
+	private Retrofit retrofit2 = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl("https://exchange2.matraining.com").build();
 
 	public static void main(String[] args) {
 		SpringApplication.run(OrderValidationServerApplication.class, args);
 	}
 
 	@Override
-	public void run(ApplicationArguments args) throws Exception {
+	public void run(ApplicationArguments args)  {
 		var marketdataService = retrofit.create(GetMarketData.class);
-		Call<List<Trade>> response = marketdataService.getMarketData();
-		MD.setData(response.execute().body());
+		var marketdata2Service = retrofit.create(GetMarketData.class);
 
+		try {
+			Call<List<Trade>> response = marketdataService.getMarketData();
+			MD.setData(response.execute().body());
+			MD.setData2(marketdata2Service.getMarketData().execute().body());
+		}catch(java.io.IOException e){e.printStackTrace();}
 	}
 }
