@@ -35,13 +35,16 @@ public class PostOrderService {
                 deserializeJson(json);
                 try {
                     String orderID = executeRequest();
-                    if (orderID == null) {
+                    if (orderID == null || orderID.isEmpty()) {
                         OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "failed", "", 0);
+                        System.out.println("order failed");
+                        jedis.publish("Channel#completed", serializeObject(openOrder));
+                    }else {
+                        OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "open", orderID, 0);
+                        System.out.println("order succeeded");
                         jedis.publish("Channel#completed", serializeObject(openOrder));
                     }
-                    OpenOrder openOrder = new OpenOrder(order.getProduct(), order.getQuantity(), order.getPrice(), order.getSide(), order.getExchange(), order.getPortfolioID(), "open", orderID, 0);
-                    jedis.publish("Channel#completed", serializeObject(openOrder));
-                } catch (java.io.IOException e) { }
+                } catch (java.io.IOException e) { e.printStackTrace();}
             }
             try {
                 Thread.sleep(1000);
