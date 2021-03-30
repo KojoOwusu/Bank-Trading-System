@@ -1,4 +1,6 @@
 package com.tradingsystem.reportingservice.dao;
+import com.tradingsystem.reportingservice.dto.Client;
+import com.tradingsystem.reportingservice.dto.Portfolio;
 import com.tradingsystem.reportingservice.dto.TradeOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,6 +32,10 @@ public interface OrderRepository extends JpaRepository<TradeOrder, Long> {
     @Modifying
     @Query("update TradeOrder t set t.executions = :executions where t.orderid=:orderid")
     int updateExecutions(@Param("executions") int executions, @Param("orderid") String orderid);
+
+    @Query(value="select portfolio from TradeOrder where orderid=:id")
+    Portfolio findPortfolioByOrderID(@Param("id") String id);
+
 
 //    <S extends TradeOrder> S save(S s);
 }

@@ -45,7 +45,41 @@ public class OrderStatus {
         return cumulativeQuantity;
     }
 
+    public void setProduct(String product) {
+        this.product = product;
+    }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setSide(String side) {
+        this.side = side;
+    }
+
+    public void setExecutions(List<Execution> executions) {
+        this.executions = executions;
+    }
+
+    public void setCumulativeQuantity(int cumulativeQuantity) {
+        this.cumulativeQuantity = cumulativeQuantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderStatus{" +
+                "product='" + product + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", side='" + side + '\'' +
+                ", executions=" + executions +
+                ", cumulativeQuantity=" + cumulativeQuantity +
+                '}';
+    }
 }
 
 

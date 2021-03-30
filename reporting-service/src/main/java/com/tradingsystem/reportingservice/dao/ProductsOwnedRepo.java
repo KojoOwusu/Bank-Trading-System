@@ -16,9 +16,15 @@ import java.util.List;
 @Repository
 public interface ProductsOwnedRepo extends JpaRepository<ProductsOwned, Long> {
 
-    List<ProductsOwned> findAllByClient(Client client);
+    List<ProductsOwned> findAll();
+
+    @Query(value = "select p.quantityOwned from ProductsOwned p where p.client=:client AND p.product=:product")
+    int findQuantityOwned(@Param("client") Client client, @Param("product") Product product);
 
     @Modifying
     @Query("update ProductsOwned p set p.quantityOwned = :quantity where p.client=:client AND p.product=:product")
-    int updateOrderStatus(@Param("quantity") int quantity, @Param("client") Client client, @Param("product") Product product);
+    int updateQuantity(@Param("quantity") int quantity, @Param("client") Client client, @Param("product") Product product);
+
+    @Query(value="select p.product from ProductsOwned p where p.product=:product AND p.client=:client")
+    Product getProductFromProductsOwned(@Param("product") Product product, @Param("client") Client client);
 }

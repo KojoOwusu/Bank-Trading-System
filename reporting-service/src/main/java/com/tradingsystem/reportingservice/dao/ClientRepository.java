@@ -18,7 +18,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     List<Client> findAll();
 
     @Modifying
-    @Query("update Client c set c.funds = :amount  where clientid = :clientid")
-    int updateClientFunds(@Param("clientid") Long clientid, @Param("amount") Double amount);
+    @Query("update Client c set c.funds = :amount  where c.clientid = :clientid")
+    int updateClientFunds(@Param("clientid") long clientid, @Param("amount") Double amount);
 
 }

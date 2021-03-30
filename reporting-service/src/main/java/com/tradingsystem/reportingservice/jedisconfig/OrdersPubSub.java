@@ -7,9 +7,8 @@ import com.tradingsystem.reportingservice.dao.OrderRepository;
 import com.tradingsystem.reportingservice.dao.PortfolioRepository;
 import com.tradingsystem.reportingservice.dao.ProductsOwnedRepo;
 import com.tradingsystem.reportingservice.dao.ProductsRepository;
-import com.tradingsystem.reportingservice.dto.Portfolio;
-import com.tradingsystem.reportingservice.dto.ProductsOwned;
-import com.tradingsystem.reportingservice.dto.TradeOrder;
+import com.tradingsystem.reportingservice.dto.*;
+import org.apache.catalina.util.ToStringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.JedisPubSub;
 
@@ -28,7 +27,8 @@ public class OrdersPubSub extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {
-        System.out.printf("Order has been placed to exchange");
+        System.out.println("channel: "+channel+" "+message);
+
         try{
         OpenOrder order =objectMapper.readValue(message, OpenOrder.class);
         TradeOrder tradeOrder = new TradeOrder();
@@ -42,16 +42,20 @@ public class OrdersPubSub extends JedisPubSub {
         tradeOrder.setOrderid(order.getOrderID());
         tradeOrder.setExchange(order.getExchange());
         tradeOrder.setPortfolio(portfolio);
+        tradeOrder.setExecutions(order.getExecutions());
 
         orderRepository.save(tradeOrder);
-        System.out.println("Saved order: "+ tradeOrder.getOrderid() +" to the database");
-        var ProductsOwned = new ProductsOwned();
-        ProductsOwned.setClient(portfolio.getClient());
-        ProductsOwned.setQuantityOwned(0);
-        ProductsOwned.setProduct(productsRepository.findByTicker(tradeOrder.getProductname()).get());
-        productsOwnedRepo.save(ProductsOwned);
 
-
+            Client client = portfolioRepository.findClientID(portfolio.getPortfolioid());
+            Product product = productsRepository.findByTicker(tradeOrder.getProductname()).get();
+        if(!checkIfEntryExists(product,tradeOrder, client)){
+            var ProductsOwned = new ProductsOwned();
+            ProductsOwned.setClient(client);
+            ProductsOwned.setQuantityOwned(0);
+            ProductsOwned.setProduct(product);
+           productsOwnedRepo.save(ProductsOwned);
+        }
+            System.out.println("Saved order: "+ tradeOrder.getOrderid() +" to the database");
         }catch(JsonProcessingException e){}
     }
 
@@ -63,5 +67,8 @@ public class OrdersPubSub extends JedisPubSub {
     @Override
     public void onUnsubscribe(String channel, int subscribedChannels) {
         System.out.println("Client is Unsubscribed from channel : "+ channel);
+    }
+    private Boolean checkIfEntryExists(Product p, TradeOrder order, Client client){
+        return productsOwnedRepo.findAll().stream().anyMatch(x->productsOwnedRepo.getProductFromProductsOwned(p,client).getTicker().equals(order.getProductname()));
     }
 }

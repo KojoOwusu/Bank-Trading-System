@@ -12,10 +12,11 @@ public class OpenOrder {
     private int portfolioID;
     private String orderStatus;
     private String orderID;
+    private int executions;
 
     public OpenOrder(){}
 
-    public OpenOrder(String product, int quantity, double price, String side, String exchange, int portfolioID, String orderStatus, String orderID) {
+    public OpenOrder(String product, int quantity, double price, String side, String exchange, int portfolioID, String orderStatus, String orderID, int executions) {
         this.product = product;
         this.quantity = quantity;
         this.price = price;
@@ -24,6 +25,7 @@ public class OpenOrder {
         this.portfolioID = portfolioID;
         this.orderStatus = orderStatus;
         this.orderID = orderID;
+        this.executions = executions;
     }
 
     public String getProduct() {
@@ -56,6 +58,10 @@ public class OpenOrder {
 
     public String getOrderID() {
         return orderID;
+    }
+
+    public int getExecutions() {
+        return executions;
     }
 
     public void setProduct(String product) {

@@ -15,9 +15,9 @@ public class SpringConfig {
     @Autowired
     private ScheduledOrderStatus orderStatusChecker;
 
-   @Scheduled(fixedRate = 60000)
+   @Scheduled(fixedRate = 120000)
    @Async
    public void run(){
-          //  orderStatusChecker.run();
+       orderStatusChecker.run();
    }
 }
