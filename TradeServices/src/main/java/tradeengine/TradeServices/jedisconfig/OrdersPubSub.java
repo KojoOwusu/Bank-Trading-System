@@ -18,8 +18,8 @@ public class OrdersPubSub extends JedisPubSub {
 
     private Jedis jedis;
     public OrdersPubSub(){
-        jedis=new Jedis();
-     //   jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
+        jedis=new Jedis("redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349);
+       jedis.auth("fcTHon925fcjUDen1ujM4x5Ra1PsJYIk");
 
         //"redis-14349.c81.us-east-1-2.ec2.cloud.redislabs.com", 14349
     }
