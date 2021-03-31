@@ -35,23 +35,38 @@ public class TradeengineService {
     }
 
     private void nonsplitOrder(String side, int quantity){
-        if(side.equals("buy")) {
-            if (getBidPriceForMarket1() > getBidPriceForMarket2())
-                dispatchOrder(createTrade(orderRequest.getPrice(), "exchange1", quantity));
-            else
-                dispatchOrder(createTrade(orderRequest.getPrice(), "exchange2", quantity));
-        }else{
-            if(getAskPriceForMarket1()>getAskPriceForMarket2())
-                dispatchOrder(createTrade(orderRequest.getPrice(), "exchange2", quantity));
-            else
-                dispatchOrder(createTrade(orderRequest.getPrice(), "exchange1", quantity));
+
+            if(getAskPriceForMarket2() != null && getBidPriceForMarket2()!= null){
+                if(side.equals("buy")) {
+                    if (getBidPriceForMarket1() > getBidPriceForMarket2()) {
+                        dispatchOrder(createTrade(orderRequest.getPrice(), "exchange1", quantity));
+                    } else
+                        dispatchOrder(createTrade(orderRequest.getPrice(), "exchange2", quantity));
+                }else {
+                    if (getAskPriceForMarket1() > getAskPriceForMarket2())
+                        dispatchOrder(createTrade(orderRequest.getPrice(), "exchange2", quantity));
+                    else
+                        dispatchOrder(createTrade(orderRequest.getPrice(), "exchange1", quantity));
+                }
+            }
+        else if(getAskPriceForMarket1() != null){
+            TradeOrder tradeOrder = createTrade(orderRequest.getPrice(), "exchange1", quantity);
+            dispatchOrder(tradeOrder);
         }
-        System.out.println(orderRequest.getPrice()+" "+orderRequest.getQuantity());
+        else if(getAskPriceForMarket2() != null){
+            TradeOrder tradeOrder = createTrade(orderRequest.getPrice(), "exchange2", quantity);
+            dispatchOrder(tradeOrder);
+        }
+        else{
+                TradeOrder tradeOrder = createTrade(orderRequest.getPrice(), "", quantity);
+                dispatchOrder(tradeOrder);
+            }
     }
 
     private void multilegSplit(String side){
 
         List<Matchable> ordersList = fetchOrderbookdata(orderRequest.getProduct(), side).orElse(new ArrayList<>());
+
         if(side.equals("buy")){
             Collections.reverse(ordersList);
         }
@@ -82,11 +97,10 @@ public class TradeengineService {
                 finalorder = createTrade(o.getPrice(), o.getExchange(), remainder);
             }
             else {
-                remainder = 0;
                 finalorder = createTrade(o.getPrice(), o.getExchange(), remainder);
             }
             orderRequest.setQuantity(remainder);
-            System.out.println(finalorder.getPrice()+" "+finalorder.getQuantity()+" "+finalorder.getExchange());
+           System.out.println(finalorder.getPrice()+" "+finalorder.getQuantity()+" "+finalorder.getExchange());
             index+=1;
             dispatchOrder(finalorder);
         }while(difference < 0);
@@ -147,8 +161,14 @@ public class TradeengineService {
                     filter(x->x.getCumulativeQuantity() != x.getQuantity()).collect(Collectors.toList());
             List<Matchable> newList = new ArrayList<>();
 
-           ordersmarket1.stream().forEach(x-> newList.add(new Matchable(x.getProduct(), x.getQuantity(), x.getPrice(), x.getSide(),x.getExecutions(),x.getCumulativeQuantity(),"exchange1")));
-           ordersmarket2.stream().forEach(x-> newList.add(new Matchable(x.getProduct(), x.getQuantity(), x.getPrice(), x.getSide(),x.getExecutions(),x.getCumulativeQuantity(),"exchange2")));
+            if(ordersmarket1.isEmpty() && ordersmarket2.isEmpty())
+                return Optional.of(newList);
+            else if(ordersmarket2.isEmpty()){
+                ordersmarket1.stream().forEach(x-> newList.add(new Matchable(x.getProduct(), x.getQuantity(), x.getPrice(), x.getSide(),x.getExecutions(),x.getCumulativeQuantity(),"exchange1")));
+            }
+            else if(ordersmarket1.isEmpty()){
+                ordersmarket2.stream().forEach(x-> newList.add(new Matchable(x.getProduct(), x.getQuantity(), x.getPrice(), x.getSide(),x.getExecutions(),x.getCumulativeQuantity(),"exchange2")));
+            }
            Collections.sort(newList);
            return Optional.of(newList);
 
