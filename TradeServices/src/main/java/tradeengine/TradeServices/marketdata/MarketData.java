@@ -17,7 +17,8 @@ public class MarketData {
         try {
             this.data1 = marketDataPopulator.fetchMarketData();
             this.data2 = marketDataPopulator2.fetchMarketData();
-        }catch (java.io.IOException e){e.printStackTrace();}
+        }catch (java.io.IOException e){e.printStackTrace();
+       }
     }
 
     public List<TradeData> getData1() {

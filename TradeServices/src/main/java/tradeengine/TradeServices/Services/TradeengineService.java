@@ -58,7 +58,6 @@ public class TradeengineService {
         int difference;
         int index=0;
         int remainder = orderRequest.getQuantity();
-
         do {
             if(index == ordersList.size()-1 || ordersList.isEmpty()){
                 nonsplitOrder(side,remainder);
